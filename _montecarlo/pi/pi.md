@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Pi estimation
-permalink: /montecarlo/pi/
+permalink: /randomThoughts/montecarlo/pi/
 description: Estimating the value of the Pi constant by using the Monte Carlo method.
 ---
 
