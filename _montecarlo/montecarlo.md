@@ -8,7 +8,7 @@ permalink: /montecarlo/
   {% if item.title != 'Monte Carlo' %}
   <h2>{{ item.title }}</h2>
   <p>{{ item.description }}</p>
-  <p><a href="{{ site.baseurl }}{{ item.link }}">{{ item.title }}</a></p>
+  <p><a href="https://anazli.github.io/randomThoughts{{ item.link }}">{{ item.title }}</a></p>
   {% endif %}
 {% endfor %}
 
