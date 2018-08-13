@@ -1,6 +1,9 @@
 theme: jekyll-theme-hacker
 markdown: kramdown
 mathjax: true
+baseurl: ""
+url: "anazli.github.io"
+permalink: /:title
 
 collections:
   montecarlo:
