@@ -11,7 +11,7 @@
 <ul>
 {% for item in site.data.navigation %}
 	<li>
-		<a href="{{ item.link }}"{% if item.link == page.link %}class="active"{% endif %}>
+		<a href="{{ site.baseurl }}{{ item.link }}"{% if item.link == page.link %}class="active"{% endif %}>
 			{% if item.link == navurl %}
 				<b>{{ item.name }}</b>
 			{% else %}
