@@ -79,7 +79,7 @@ Starting with an interval \\([x_1,x_2]\\) we may not necessarily include the roo
 
 The following figure shows a few steps of the method.
 
-|![Linear interpolation.](../assets/images/posts/linear_inter.png){: .center-image }|
+|![Linear interpolation.]({{ site.baseurl }}/assets/images/posts/linear_inter.png){: .center-image }|
 |:--:|
 |Linear interpolation.|
 
