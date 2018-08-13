@@ -4,6 +4,7 @@ title: About
 permalink: /about/
 ---
 
+
 # About
 
 Greetings, my name is Andreas Nazlidis. I'm a postgraduate Computational Physicist of the Aristotle University of Thessaloniki and I'm currenty living in the city of Munich in south Germany where I work to make a living and at the same time I'm learning Deutsch.

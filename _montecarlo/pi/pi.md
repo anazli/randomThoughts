@@ -5,6 +5,7 @@ permalink: /montecarlo/pi/
 description: Estimating the value of the Pi constant by using the Monte Carlo method.
 ---
 
+
 # \\(\pi\\) estimation
 
 One example that is provided in many textbooks about Monte Carlo simulations is the estimation of the value of Pi. This can be achieved by using two types of random sampling, direct sampling or by generating a Markov chain.

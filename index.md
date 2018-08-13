@@ -4,6 +4,7 @@ title: Home
 permalink: /
 ---
 
+
 # Categories
 
 {% include categories.html %}
