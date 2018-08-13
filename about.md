@@ -1,7 +1,7 @@
 ---
 layout: default
 title: About
-permalink: https://anazli.github.io/randomThoughts/about/
+permalink: /about/
 ---
 
 # About

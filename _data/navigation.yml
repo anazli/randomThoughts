@@ -1,11 +1,11 @@
-- link: /randomThoughts/
+- link: /
   name: Home
-- link: /randomThoughts/montecarlo/
+- link: /montecarlo/
   name: Monte Carlo
   subfolderitems:
-      - link: /randomThoughts/montecarlo/pi/
+      - link: /montecarlo/pi/
         name: Pi
-- link: /randomThoughts/about/
+- link: /about/
   name: About
 
 
