@@ -79,7 +79,7 @@ Starting with an interval \\([x_1,x_2]\\) we may not necessarily include the roo
 
 The following figure shows a few steps of the method.
 
-|![Linear interpolation.](/assets/images/posts/linear_inter.png){: .center-image }|
+|![Linear interpolation.](../assets/images/posts/linear_inter.png){: .center-image }|
 |:--:|
 |Linear interpolation.|
 
@@ -130,7 +130,7 @@ where \\(\theta\\) is the angle \\(A\hat{x_1}x_0\\).
 
 So the iterative form of the method is \\(x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}\\)
 
-|![Newton Raphson.](/assets/images/posts/newton_raphson.png){: .center-image }|
+|![Newton Raphson.](../assets/images/posts/newton_raphson.png){: .center-image }|
 |:--:|
 |Newton -- Raphson.|
 
