@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Home
-permalink: /randomThoughts/
+permalink: anazli.github.io/randomThoughts/
 ---
 
 
