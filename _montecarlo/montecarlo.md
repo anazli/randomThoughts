@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Monte Carlo
-permalink: /randomThoughts/montecarlo/
+permalink: https://anazli.github.io/randomThoughts/montecarlo/
 ---
 {% for item in site.montecarlo %}
   {% if item.title != 'Monte Carlo' %}

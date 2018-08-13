@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Pi estimation
-permalink: /randomThoughts/montecarlo/pi/
+permalink: https://anazli.github.io/randomThoughts/montecarlo/pi/
 description: Estimating the value of the Pi constant by using the Monte Carlo method.
 ---
 
