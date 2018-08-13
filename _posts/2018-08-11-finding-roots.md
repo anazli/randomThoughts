@@ -130,7 +130,7 @@ where \\(\theta\\) is the angle \\(A\hat{x_1}x_0\\).
 
 So the iterative form of the method is \\(x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}\\)
 
-|![Newton Raphson.](../assets/images/posts/newton_raphson.png){: .center-image }|
+|![Newton Raphson.]({{ site.baseurl }}/assets/images/posts/newton_raphson.png){: .center-image }|
 |:--:|
 |Newton -- Raphson.|
 
