@@ -1,7 +1,7 @@
 theme: jekyll-theme-hacker
 markdown: kramdown
 mathjax: true
-baseurl: ""
+baseurl: "anazli.github.io/randomThoughts"
 url: "anazli.github.io"
 permalink: /:title
 
