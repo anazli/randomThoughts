@@ -1,0 +1,26 @@
+<!--<nav>
+  {% for item in site.data.navigation %}
+    <a href="{{ item.link }}" {% if item.highlight %}style="border: 1px solid red;"{% endif %} {% if item.link == page.url %}class="active"{% endif %}>
+      {{ item.name }}
+    </a>
+  {% endfor %}
+</nav>
+-->
+{% assign navurl = page.link | remove: 'index.md' %}
+<ul>
+{% for item in site.data.navigation %}
+	<li>
+		<a href="{{ item.link }}"{% if item.link == page.link %}class="active"{% endif %}>
+			{% if item.link == navurl %}
+				<b>{{ item.name }}</b>
+			{% else %}
+				{{ item.name }}
+			{% endif %}
+		</a>
+	</li>
+	{% if item.subfolderitems and navurl contains item.link %}
+		{% include navigation.html nav=item.subfolderitems %}
+	{% endif %}
+{% endfor %}
+</ul>
+

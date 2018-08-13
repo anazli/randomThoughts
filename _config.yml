@@ -1,1 +1,10 @@
-theme: jekyll-theme-time-machine
+theme: jekyll-theme-hacker
+markdown: kramdown
+mathjax: true
+
+collections:
+  montecarlo:
+    output: true
+
+
+
