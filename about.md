@@ -15,5 +15,5 @@ During my studies I learned (mostly by myself) how to program in C++, Python, Fo
 
 Other interests include a lot of Music like Jazz/Blues, Rock, pop, instrumental, clasical, dub-Techno, ambient and others. I like reading mystery novels, detective stories, historical or fantasy novels. There are too many good films that I like to list them here. Favorite games are *the legend of zelda*, *broken sword*, *siberia*, *god of war*, *diablo* and also many good old arcade ones.
 
-
+{% include social_media.html %}
 
