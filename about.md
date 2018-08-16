@@ -4,6 +4,7 @@ title: About
 permalink: /about/
 ---
 
+ <img src="https://steamuserimages-a.akamaihd.net/ugc/34100756892007321/301ADDDDE6EE84418A87B38E6DD3B6A0E922526B/?interpolation=lanczos-none&output-format=jpeg&output-quality=95&fit=inside%7C1920%3A*" alt="HTML5 Icon" style="width:100%;height:175px;"> 
 
 # About
 
@@ -13,5 +14,5 @@ This is my personal site and blog where I post some of the mini-projects I've wr
 
 During my studies I learned (mostly by myself) how to program in C++, Python, Fortran77 and LaTeX. I have also used software like *Mathematica*, *MatLab*, *GNU octave* and *Semcad X*. I've recently taken some online courses in Machine and Deep learning where I wrote some code in Python and lerned a little bit about *Tensorflow* and *Keras*. Currently I'm also trying to learn about Computer Graphics with *OpenGL* by following some good online tutorials. What I've also found very interesting is the ray tracing algorithm used in CG when I was reading the book _Ray tracing in one weekend_ by Peter Shirley.
 
-Other interests include a lot of Music like Jazz/Blues, Rock, pop, instrumental, clasical, dub-Techno, ambient and others. I like reading mystery novels, detective stories, historical or fantasy novels. There are too many good films that I like to list them here. Favorite games are *the legend of zelda*, *broken sword*, *siberia*, *god of war*, *diablo* and also many good old arcade ones.
+Other interests include a lot of Music like Jazz/Blues, Rock, pop, instrumental, clasical, dub-Techno, ambient and others. I like reading mystery novels, detective stories, historical or fantasy novels. There are too many good films that I like to list them here. Favorite games are *the legend of zelda*, *broken sword*, *Gabriel knight* *siberia*, *god of war*, *diablo* and also many good old arcade ones.
 
