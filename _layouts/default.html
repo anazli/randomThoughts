@@ -20,7 +20,20 @@ config=TeX-AMS-MML_HTMLorMML"></script>
       <div class="container">
         <h1>{{ site.title | default: site.github.repository_name }}</h1>
         <h2>{{ site.description | default: site.github.project_tagline }}</h2>
-	{% include navigation.html %}
+	
+
+	
+	<table style='margin-left: auto; margin-right: auto'>
+        <tr>
+           <td>
+              <div>{% include navigation.html %} </div>
+           </td>
+           <td>
+              <div>{% include social_media.html %} </div>
+           </td>
+        </tr>
+        </table>
+
 
         <section id="downloads">
           {% if site.show_downloads %}
