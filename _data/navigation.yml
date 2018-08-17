@@ -5,6 +5,10 @@
   subfolderitems:
       - link: /montecarlo/pi/
         name: Pi
+      - link: /montecarlo/ising/
+        name: Ising Model
+- link: /thesis/
+  name: Thesis
 - link: /about/
   name: About
 
