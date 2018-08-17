@@ -22,9 +22,9 @@ config=TeX-AMS-MML_HTMLorMML"></script>
 <meta property="og:url" content="http://localhost:4000/montecarlo/pi/" />
 <meta property="og:site_name" content="randomThoughts" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2018-08-18T01:09:54+02:00" />
+<meta property="article:published_time" content="2018-08-18T01:38:29+02:00" />
 <script type="application/ld+json">
-{"dateModified":"2018-08-18T01:09:54+02:00","datePublished":"2018-08-18T01:09:54+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/montecarlo/pi/"},"headline":"Pi estimation","url":"http://localhost:4000/montecarlo/pi/","description":"Estimating the value of the Pi constant by using the Monte Carlo method.","@context":"http://schema.org"}</script>
+{"dateModified":"2018-08-18T01:38:29+02:00","datePublished":"2018-08-18T01:38:29+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/montecarlo/pi/"},"headline":"Pi estimation","url":"http://localhost:4000/montecarlo/pi/","description":"Estimating the value of the Pi constant by using the Monte Carlo method.","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -229,11 +229,25 @@ According to the law of large numbers, if we sample more random points we can re
     <span class="k">return</span> <span class="n">new_v</span><span class="p">;</span>
 </code></pre></div></div>
 
-<p>This is better illustrated in 2 dimensions in the figure bellow. Instead of having random points there are particles (circles) in random positions (center of the circle).</p>
+<p>This is better illustrated in 2 dimensions in the figure bellow. Instead of having random points there are particles (circles) in random positions (centers of circles).</p>
 
 <p><img src="../../assets/images/pi/markov.png" alt="Random displacement of a point in a Markov process" class="center-image" /></p>
 
-<p>We have a particle (i) in an initial random position at the center of the shaded square. We then generate 2 uniform random numbers in the interval (0,1) and with the above code without the z coordinate we get a random displacement inside this shaded square which gives us the new random position. With this method we create a Markov Chain that consists of random states where every new state depends on the previous one. If the next random position falls outside the big square (computational space), we reject the move and stay where we were. In this case we count the current random position (state) (i) again otherwise we move the particle to the new random position. The rule of thumb is that the acceptance rate to be about 0.5, half of the total steps to be accepted. The rate can be tuned by us by changing the maximum displacement \(\delta)).</p>
+<p>We have a particle (i) in an initial random position at the center of the shaded square which is of side \(2\delta\), in 3 dimensions the square is a small cube. We then generate 2 uniform random numbers in the interval (0,1) and with the above code without the z coordinate</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="n">dx</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">random</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">dy</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">random</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta</span><span class="p">;</span>
+
+<span class="c1">//or as above
+</span><span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="n">delta</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">b</span> <span class="o">=</span>  <span class="n">delta</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">random</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">random</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">);</span>
+
+<span class="kt">double</span> <span class="n">new_x</span> <span class="o">=</span> <span class="n">old_x</span> <span class="o">+</span> <span class="n">dx</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">new_y</span> <span class="o">=</span> <span class="n">old_y</span> <span class="o">+</span> <span class="n">dy</span><span class="p">;</span>
+</code></pre></div></div>
+<p>we get a random displacement inside this shaded square which gives us the new random position. With this method we create a Markov Chain that consists of random states where every new state depends on the previous one. If the next random position falls outside the big square (computational space), we reject the move and stay where we were. In this case we count the current random position (state) (i) again otherwise we move the particle to the new random position. This is our boundary condition.
+The rule of thumb is that the acceptance rate to be about 0.5, half of the total steps to be accepted. The rate can be tuned by us by changing the maximum displacement \(\delta\).</p>
 
 <p>With this method there is a correlation between the random points that are created, because every new random point depends on the previous one but not on all previous points.</p>
 

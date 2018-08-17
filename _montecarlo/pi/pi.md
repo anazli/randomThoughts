@@ -77,11 +77,26 @@ In the C++ implementation, a Markov Chain is produced. We start from a random po
     return new_v;
 ```
 
-This is better illustrated in 2 dimensions in the figure bellow. Instead of having random points there are particles (circles) in random positions (center of the circle).
+This is better illustrated in 2 dimensions in the figure bellow. Instead of having random points there are particles (circles) in random positions (centers of circles).
 
 ![Random displacement of a point in a Markov process](../../assets/images/pi/markov.png){: .center-image }
 
-We have a particle (i) in an initial random position at the center of the shaded square. We then generate 2 uniform random numbers in the interval (0,1) and with the above code without the z coordinate we get a random displacement inside this shaded square which gives us the new random position. With this method we create a Markov Chain that consists of random states where every new state depends on the previous one. If the next random position falls outside the big square (computational space), we reject the move and stay where we were. In this case we count the current random position (state) (i) again otherwise we move the particle to the new random position. The rule of thumb is that the acceptance rate to be about 0.5, half of the total steps to be accepted. The rate can be tuned by us by changing the maximum displacement \\(\delta\)).
+We have a particle (i) in an initial random position at the center of the shaded square which is of side \\(2\delta\\), in 3 dimensions the square is a small cube. We then generate 2 uniform random numbers in the interval (0,1) and with the above code without the z coordinate
+```cpp
+double dx = (2. * random(0., 1.) - 1.) * delta;
+double dy = (2. * random(0., 1.) - 1.) * delta;
+
+//or as above
+double a = -delta;
+double b =  delta;
+double dx = a + (b - a) * random(0.,1.);
+double dy = a + (b - a) * random(0.,1.);
+
+double new_x = old_x + dx;
+double new_y = old_y + dy;
+```
+we get a random displacement inside this shaded square which gives us the new random position. With this method we create a Markov Chain that consists of random states where every new state depends on the previous one. If the next random position falls outside the big square (computational space), we reject the move and stay where we were. In this case we count the current random position (state) (i) again otherwise we move the particle to the new random position. This is our boundary condition.
+The rule of thumb is that the acceptance rate to be about 0.5, half of the total steps to be accepted. The rate can be tuned by us by changing the maximum displacement \\(\delta\\).
 
 With this method there is a correlation between the random points that are created, because every new random point depends on the previous one but not on all previous points. 
 
