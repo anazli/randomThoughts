@@ -23,6 +23,16 @@ body {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
+@media only screen and (min-width: 481px) {
+  body {
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+}
+
+
+
 nav {
     display: inline-grid;
     position: relative;
