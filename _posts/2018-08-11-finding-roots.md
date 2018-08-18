@@ -8,9 +8,9 @@ categories: [Numerical Methods]
 tags: [blog, Numerical]
 ---
 
-There are many mathematical equations that can't be solved by hand. Luckily we have computers to do that work for us. Iterative methods such as the bisection, the linear interpolation and the Newton-Raphson method were created to find the roots of an equation.
+There are many mathematical equations that can't be solved by hand. Luckily we have computers to do that work for us. Iterative methods such as the bisection, linear interpolation and Newton-Raphson method were created to find roots of equations.
 
-There is a repository named [numerical](https://github.com/anazli/numerical.git) where I add some numerical methods including functions that implement the above methods for finding the roots of an equation.
+There is a repository named [numerical](https://github.com/anazli/numerical.git) where I add some numerical methods including functions that implement the methods above.
 
 ## Bisection method
 
@@ -18,7 +18,7 @@ We have a continuous function \\(f(x)\\) defined in the interval \\([a,b]\\) and
 * if \\(f(\mu_0) = 0\\) we have found the root which is \\(\mu_0\\).
 * if \\(f(\mu_0)f(a_0) \lt 0\\), define a new interval \\([a_0,\mu_0]\\).
 * if \\(f(\mu_0)f(b_0) \lt 0\\), define a new interval \\([\mu_0, b_0]\\).
-* repeat until \\(f(\mu_0) = 0\\).
+* repeat until \\(f(\mu_0) \simeq 0\\).
 
 An illustration of the method is given by the following figure on [wikipedia](https://en.wikipedia.org/wiki/Bisection_method).
 
@@ -28,11 +28,11 @@ An illustration of the method is given by the following figure on [wikipedia](ht
 
 We can implement the method with the C++ code below. The function takes as input a function pointer which points to the function we want to find its root, 2 variables of type double which are the 2 limits of the interval where the root might be and one variable of type double that is the precision we want to have for our result and finally one unsigned int variable that is the number of iterations. 
 ```cpp
-double bisection(double (*f)(const double&), double x1, double x2,const double& pre)
+double bisection(double (*f)(const double&), double x1, double x2,const double& pre, unsigned int& iter)
 {
 	double m{0.};
 	double y1{0.}, y2{0.};
-	
+
 	y1 = f(x1);
 	y2 = f(x2);
 
@@ -49,16 +49,19 @@ double bisection(double (*f)(const double&), double x1, double x2,const double& 
 			else {
 				x1 = m;
 			}
+
+			iter++;
 		}
 
 		return m;
 	}
 	else {
-	    cout << "There isn't exaclty one root in the given interval." << endl;
+		cout << "There isn't exactly one root in the given interval." << endl;
 		return INFINITY;
 	}
 
 }
+
 ```
 
 As an example if we apply the method on the equation \\(x^2 + \sin{x} + e^x -2 = 0\\) which has 2 roots \\(x_1 = -1.675502\\) and \\(x_2 = 0.387082\\), as we can also see on the [Wolfram Alpha](https://www.wolframalpha.com/input/?i=x*x+%2B+sin%5Bx%5D+%2B+exp%5Bx%5D+-+2) computational engine, and we set the interval to be \\([-3,-1]\\) for the first root with a precision of \\(10^{-3}\\) we get \\(x_1 = -1.675\\). The root has been found after 11 iterations of the method. If we set another interval the number of iterations may change.
@@ -71,7 +74,7 @@ There is another method to find the root of an equation which is called linear i
 
 The general form of this equation which gives us the next point at every iteration is \\(x_{n+2} = x_{n+1} - \frac{f(x_{n+1})}{f(x_{n+1}) - f(x_{n})}(x_{n+1} - x_{n})\\). 
 
-Starting with an interval \\([x_1,x_2]\\) we may not necessarily include the root, the steps of the method are the following
+Starting with an interval \\([x_1,x_2]\\) which may not necessarily include the root, the steps of the method are the following
 * if \\(f(x_3) = 0\\), we have found the root
 * if \\(f(x_1)f(x_3) \lt 0\\), set \\(x_2 = x_3\\)
 * if \\(f(x_2)f(x_3) \lt 0\\), set \\(x_1 = x_3\\)
@@ -83,9 +86,9 @@ The following figure shows a few steps of the method.
 |:--:|
 |Linear interpolation.|
 
-We can implement this method with the following function in C++ which you can find [here](https://github.com/anazli/numerical.git). The function takes as input the same parameters as the bisection method above.
+We can implement this method with the following function in C++. The function takes as input the same parameters as the bisection method above.
 ```cpp
-double linear_interpolation(double (*f)(const double&), double x1, double x2, const double& pre) 
+double linear_interpolation(double (*f)(const double&), double x1, double x2, const double& pre, unsigned int& iter) 
 {
 
 	double x3(0.);
@@ -109,10 +112,14 @@ double linear_interpolation(double (*f)(const double&), double x1, double x2, co
 		else
 			x1 = x3;
 
+		iter++;
+
 	}
 
 	return x3;
 }
+	
+
 ```
 
 If we run this routine with the same parameters as the bisection method, we get the same results after 9 iterations but this also depends on the choise of the initial interval.
@@ -134,7 +141,7 @@ So the iterative form of the method is \\(x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}
 |:--:|
 |Newton -- Raphson.|
 
-Below follows the C++ code of the method which can be found [here](https://github.com/anazli/numerical.git). The inputs are 2 function pointers for the function and its derivative, one variable of type double that is the initial estimation of the root, one double which defines the precision and one unsigned int which is the number of iterations.
+Below follows the C++ code of the method. The inputs are 2 function pointers for the function and its derivative, one variable of type double that is the initial estimation of the root, one double which defines the precision and one unsigned int which is the number of iterations.
 
 ```cpp
 double newton_raphson(double (*f)(const double&), double (*df)(const double&), double init_point, const double& pre, unsigned int& iter)
@@ -152,4 +159,4 @@ double newton_raphson(double (*f)(const double&), double (*df)(const double&), d
 }
 ```
 
-For the previous example if we choose an initial point like -2 or -3 we find the result -1.676 after 4 iterations.
+For the previous example if we choose an initial point like -2 or -3 we find the result -1.676 which is pretty accurate after 4 iterations.

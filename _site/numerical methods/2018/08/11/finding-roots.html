@@ -157,9 +157,9 @@ config=TeX-AMS-MML_HTMLorMML"></script>
 
 <p class="view">by anazli</p>
 
-<p>There are many mathematical equations that can’t be solved by hand. Luckily we have computers to do that work for us. Iterative methods such as the bisection, the linear interpolation and the Newton-Raphson method were created to find the roots of an equation.</p>
+<p>There are many mathematical equations that can’t be solved by hand. Luckily we have computers to do that work for us. Iterative methods such as the bisection, linear interpolation and Newton-Raphson method were created to find roots of equations.</p>
 
-<p>There is a repository named <a href="https://github.com/anazli/numerical.git">numerical</a> where I add some numerical methods including functions that implement the above methods for finding the roots of an equation.</p>
+<p>There is a repository named <a href="https://github.com/anazli/numerical.git">numerical</a> where I add some numerical methods including functions that implement the methods above.</p>
 
 <h2 id="bisection-method">Bisection method</h2>
 
@@ -168,7 +168,7 @@ config=TeX-AMS-MML_HTMLorMML"></script>
   <li>if \(f(\mu_0) = 0\) we have found the root which is \(\mu_0\).</li>
   <li>if \(f(\mu_0)f(a_0) \lt 0\), define a new interval \([a_0,\mu_0]\).</li>
   <li>if \(f(\mu_0)f(b_0) \lt 0\), define a new interval \([\mu_0, b_0]\).</li>
-  <li>repeat until \(f(\mu_0) = 0\).</li>
+  <li>repeat until \(f(\mu_0) \simeq 0\).</li>
 </ul>
 
 <p>An illustration of the method is given by the following figure on <a href="https://en.wikipedia.org/wiki/Bisection_method">wikipedia</a>.</p>
@@ -187,11 +187,11 @@ config=TeX-AMS-MML_HTMLorMML"></script>
 </table>
 
 <p>We can implement the method with the C++ code below. The function takes as input a function pointer which points to the function we want to find its root, 2 variables of type double which are the 2 limits of the interval where the root might be and one variable of type double that is the precision we want to have for our result and finally one unsigned int variable that is the number of iterations.</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">bisection</span><span class="p">(</span><span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span><span class="p">),</span> <span class="kt">double</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">double</span> <span class="n">x2</span><span class="p">,</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span> <span class="n">pre</span><span class="p">)</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">bisection</span><span class="p">(</span><span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span><span class="p">),</span> <span class="kt">double</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">double</span> <span class="n">x2</span><span class="p">,</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span> <span class="n">pre</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">)</span>
 <span class="p">{</span>
 	<span class="kt">double</span> <span class="n">m</span><span class="p">{</span><span class="mf">0.</span><span class="p">};</span>
 	<span class="kt">double</span> <span class="n">y1</span><span class="p">{</span><span class="mf">0.</span><span class="p">},</span> <span class="n">y2</span><span class="p">{</span><span class="mf">0.</span><span class="p">};</span>
-	
+
 	<span class="n">y1</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x1</span><span class="p">);</span>
 	<span class="n">y2</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x2</span><span class="p">);</span>
 
@@ -208,16 +208,19 @@ config=TeX-AMS-MML_HTMLorMML"></script>
 			<span class="k">else</span> <span class="p">{</span>
 				<span class="n">x1</span> <span class="o">=</span> <span class="n">m</span><span class="p">;</span>
 			<span class="p">}</span>
+
+			<span class="n">iter</span><span class="o">++</span><span class="p">;</span>
 		<span class="p">}</span>
 
 		<span class="k">return</span> <span class="n">m</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="k">else</span> <span class="p">{</span>
-	    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"There isn't exaclty one root in the given interval."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"There isn't exactly one root in the given interval."</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 		<span class="k">return</span> <span class="n">INFINITY</span><span class="p">;</span>
 	<span class="p">}</span>
 
 <span class="p">}</span>
+
 </code></pre></div></div>
 
 <p>As an example if we apply the method on the equation \(x^2 + \sin{x} + e^x -2 = 0\) which has 2 roots \(x_1 = -1.675502\) and \(x_2 = 0.387082\), as we can also see on the <a href="https://www.wolframalpha.com/input/?i=x*x+%2B+sin%5Bx%5D+%2B+exp%5Bx%5D+-+2">Wolfram Alpha</a> computational engine, and we set the interval to be \([-3,-1]\) for the first root with a precision of \(10^{-3}\) we get \(x_1 = -1.675\). The root has been found after 11 iterations of the method. If we set another interval the number of iterations may change.</p>
@@ -230,7 +233,7 @@ config=TeX-AMS-MML_HTMLorMML"></script>
 
 <p>The general form of this equation which gives us the next point at every iteration is \(x_{n+2} = x_{n+1} - \frac{f(x_{n+1})}{f(x_{n+1}) - f(x_{n})}(x_{n+1} - x_{n})\).</p>
 
-<p>Starting with an interval \([x_1,x_2]\) we may not necessarily include the root, the steps of the method are the following</p>
+<p>Starting with an interval \([x_1,x_2]\) which may not necessarily include the root, the steps of the method are the following</p>
 <ul>
   <li>if \(f(x_3) = 0\), we have found the root</li>
   <li>if \(f(x_1)f(x_3) \lt 0\), set \(x_2 = x_3\)</li>
@@ -253,8 +256,8 @@ config=TeX-AMS-MML_HTMLorMML"></script>
   </tbody>
 </table>
 
-<p>We can implement this method with the following function in C++ which you can find <a href="https://github.com/anazli/numerical.git">here</a>. The function takes as input the same parameters as the bisection method above.</p>
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">linear_interpolation</span><span class="p">(</span><span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span><span class="p">),</span> <span class="kt">double</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">double</span> <span class="n">x2</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span> <span class="n">pre</span><span class="p">)</span> 
+<p>We can implement this method with the following function in C++. The function takes as input the same parameters as the bisection method above.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">linear_interpolation</span><span class="p">(</span><span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span><span class="p">),</span> <span class="kt">double</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">double</span> <span class="n">x2</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span> <span class="n">pre</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">)</span> 
 <span class="p">{</span>
 
 	<span class="kt">double</span> <span class="n">x3</span><span class="p">(</span><span class="mf">0.</span><span class="p">);</span>
@@ -278,10 +281,14 @@ config=TeX-AMS-MML_HTMLorMML"></script>
 		<span class="k">else</span>
 			<span class="n">x1</span> <span class="o">=</span> <span class="n">x3</span><span class="p">;</span>
 
+		<span class="n">iter</span><span class="o">++</span><span class="p">;</span>
+
 	<span class="p">}</span>
 
 	<span class="k">return</span> <span class="n">x3</span><span class="p">;</span>
 <span class="p">}</span>
+	
+
 </code></pre></div></div>
 
 <p>If we run this routine with the same parameters as the bisection method, we get the same results after 9 iterations but this also depends on the choise of the initial interval.</p>
@@ -314,7 +321,7 @@ where \(\theta\) is the angle \(A\hat{x_1}x_0\).</p>
   </tbody>
 </table>
 
-<p>Below follows the C++ code of the method which can be found <a href="https://github.com/anazli/numerical.git">here</a>. The inputs are 2 function pointers for the function and its derivative, one variable of type double that is the initial estimation of the root, one double which defines the precision and one unsigned int which is the number of iterations.</p>
+<p>Below follows the C++ code of the method. The inputs are 2 function pointers for the function and its derivative, one variable of type double that is the initial estimation of the root, one double which defines the precision and one unsigned int which is the number of iterations.</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">newton_raphson</span><span class="p">(</span><span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span><span class="p">),</span> <span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">df</span><span class="p">)(</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span><span class="p">),</span> <span class="kt">double</span> <span class="n">init_point</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span> <span class="n">pre</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">)</span>
 <span class="p">{</span>
@@ -331,7 +338,7 @@ where \(\theta\) is the angle \(A\hat{x_1}x_0\).</p>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>For the previous example if we choose an initial point like -2 or -3 we find the result -1.676 after 4 iterations.</p>
+<p>For the previous example if we choose an initial point like -2 or -3 we find the result -1.676 which is pretty accurate after 4 iterations.</p>
 
 
 
