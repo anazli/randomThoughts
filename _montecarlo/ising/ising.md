@@ -21,19 +21,19 @@ To start briefly with the description of the model in two dimensions, it explain
 |Collection of magnetic moments.|
 
 There is a square (or of any other geometry) lattice in two dimensions which has a magnetic dipole or spin placed on each site. In the simplest case, these spins can have 2 states, up or down and they are represented by two integer values (1 and -1). The spins interact through exchange or other interactions. The interactions take place between the nearest neighbors on the lattice which means that every spin interact with its four neighbors (up, down, left and right). If we assume the presence of an external magnetic field \\(B\\), the Hamiltonian of the system has the following form.
-<center>
-\\(H = -J\sum_{ij}{s_is_j} - B\sum_{i}{s_i}\\)
-</center>
+
+\\[H = -J\sum_{ij}{s_is_j} - B\sum_{i}{s_i}\\]
+
 Where the first sum is between nearest neighbors. The J parameter is the interaction parameter, when it has a positive value the model describes a ferromagnetic material meaning all the spins want to line up with one another. On contrary, when J is negative, we have an anti-ferromagnetic material model where the neighbor spins point at opposite direction.
 
 We have N spins placed on a square lattice and each spin can be in 2 states (up or down), so the system has in total \\(2^N\\) states. Every state is just a different set of values that all spins can take. For a system that follows the Boltzmann probability distribution, every state \\(\mu\\) of the system occurs with probability 
-<center>
+
 \\(p_\mu = \frac{e^{-\beta E_\mu}}{Z}\\)
-</center>
+
 where \\(E_\mu\\) is the energy of the \\(\mu\\) state and \\(\beta = \frac{1}{kT}\\) is the Boltzmann parameter where \\(k = 1.38\times10^{-23}JK^{-1}\\) is the Boltzmann's constant. The Z parameter is the **partition function** of the system. It's a sum of probabilities of all the states of the system and is a normalization factor.
-<center>
+
 \\(Z = \sum{e^{-\beta E_\mu}}\\)
-</center>
+
 Our purpose is to find the best estimate of the expectation value of the quantities of interest at a certain temperature or over a range of temperatures.
 The partition function contains all the information we need about the system's macroscopic behavior. The partition function allows us to estimate thermodynamic quantities of the system and the most common ones for the Ising model are the internal energy \\(U = -\frac{\partial \log{Z}}{\partial\beta}\\), the magnetization, the specific heat \\(C = \frac{\partial U}{\partial T}\\) and the magnetic susceptibility. However, it's impossible to solve the Hamilton's equation for such a large number of states. Therefore, we might follow a different approach and solve the problem using a computational method.
 
@@ -46,9 +46,9 @@ The most straightforward approach is to define a square lattice of a finite size
 The second step is to initialize the lattice by placing every spin with an initial state 1 or -1. There are two most common initial states for the Ising model. The first one is \\(T = 0\\) where all the spins are in the same state 1 or -1, a state of order. The second state is \\(T = \infty\\) where we randomly initialize all the spins, about half of the spins point up and the rest down. The choice of the initial state might affect the time needed for the system to reach equilibrium. For example if we simulate the system at low temperatures where thermal fluctuations are smaller and start from a state of \\(T = 0\\), it is more likely to reach equilibrium faster than starting the system from a \\(T = \infty\\) state. Because we usually simulate the system at different temperatures, there is also another (third) initial state we can use. We can use as an initial state the equilibrium state of the system that we got in the previous simulation.
 
 The next step is to define the interaction of the system. For the Ising model, many interesting properties of the system can be observed in the absence of an external magnetic field. In this case the energy of the system is given by the first sum of the Hamiltonian
-<center>
+
  \\(H = -J\sum_{ij}{s_is_j}\\). 
-</center>
+ 
 The final step is to define the computational method which is going to simulate the physical system. There are many Monte Carlo algorithms but here I use the simplest and the oldest one, the Metropolis algorithm. The Metropolis algorithm is an iterative computational method where at every step the state of the system changes randomly until it finally reaches the equilibrium state. That way we simulate the random thermal fluctuation of the system from state to state. When the system reaches equilibrium, we can sample the quantities of interest over the equilibrium states. One advantage of this method is that we only need to sample a small fraction of the states of the system in order to get accurate estimates of physical quantities but this also introduces statistical errors in the calculation. The steps of the algorithm for the Ising model which define the dynamics (the rule) for changing from one state to another are the following: For a system that is currently at the \\(\mu\\) state, in order to reach the new state \\(\nu\\)
 * select a spin at random and change its state.
 * calculate the energy difference between its new and old state \\(\Delta E = E_\nu - E_\mu\\).
