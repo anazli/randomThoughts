@@ -10,7 +10,7 @@ description: A Monte Carlo simulation of the Ising model.
 
 The Ising model is a simple model of a magnet. Its study is a very good introduction to the computational method that simulates it, the Monte Carlo (MC) method. Although an exact solution for the three dimensional model has not yet been found, there are approximate and computational methods that try to describe its properties. Nevertheless, the Ising model in two dimensions is the most thoroughly researched model in Statistical Physics and there is only one computational method that can simulate this model, the MC method.
 
-Here I just write about my own simulation and what I have understood about this model. I made this attempt in order to practice the MC method myself but it doesn't mean what I write here or the code I provide is completely correct. Moreover, it's certainly not a complete study of the model. For a pretty thorough introduction to the MC method applied on the Ising model there is an excellent [book][the book] which I highly recommend written by M.E.J. Newman and G.T. Barkema.
+Here I just write about my own simulation and what I have understood about this model. I made this attempt in order to practice the MC method myself but it doesn't mean what I write here or the code I provide is completely correct. Moreover, it's certainly not a complete study of the model. For a pretty thorough introduction to the MC method applied on the Ising model there is an excellent [book](https://www.amazon.com/Monte-Carlo-Methods-Statistical-Physics/dp/0198517971) which I highly recommend written by M.E.J. Newman and G.T. Barkema.
 
 ## Model
 
@@ -47,8 +47,8 @@ The second step is to initialize the lattice by placing every spin with an initi
 
 The next step is to define the interaction of the system. For the Ising model, many interesting properties of the system can be observed in the absence of an external magnetic field. In this case the energy of the system is given by the first sum of the Hamiltonian
 
- \\[H = -J\sum_{ij}{s_is_j}\\]. 
- 
+ \\[H = -J\sum_{ij}{s_is_j}\\]
+
 The final step is to define the computational method which is going to simulate the physical system. There are many Monte Carlo algorithms but here I use the simplest and the oldest one, the Metropolis algorithm. The Metropolis algorithm is an iterative computational method where at every step the state of the system changes randomly until it finally reaches the equilibrium state. That way we simulate the random thermal fluctuation of the system from state to state. When the system reaches equilibrium, we can sample the quantities of interest over the equilibrium states. One advantage of this method is that we only need to sample a small fraction of the states of the system in order to get accurate estimates of physical quantities but this also introduces statistical errors in the calculation. The steps of the algorithm for the Ising model which define the dynamics (the rule) for changing from one state to another are the following: For a system that is currently at the \\(\mu\\) state, in order to reach the new state \\(\nu\\)
 * select a spin at random and change its state.
 * calculate the energy difference between its new and old state \\(\Delta E = E_\nu - E_\mu\\).
@@ -395,4 +395,4 @@ Correlations are in the nature of Markov chain processes and we must always take
 
 ## References
 
-[the book]: https://www.amazon.com/Monte-Carlo-Methods-Statistical-Physics/dp/0198517971
+* _M. E. J. Newman, G. T. Barkema-Monte Carlo Methods in Statistical Physics-Clarendon Press Oxford University Press (2001)_
