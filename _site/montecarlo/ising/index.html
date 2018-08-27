@@ -9,7 +9,7 @@ config=TeX-AMS-MML_HTMLorMML"></script>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/css/style.css?v=16d69e244638d9edeb45364dbd1d64df83eb0691">
+    <link rel="stylesheet" href="/assets/css/style.css?v=53938d8b1aa82d329a1a10f311d16d79b1e3325f">
     
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <title>Ising Model | randomThoughts</title>
@@ -22,9 +22,9 @@ config=TeX-AMS-MML_HTMLorMML"></script>
 <meta property="og:url" content="http://localhost:4000/montecarlo/ising/" />
 <meta property="og:site_name" content="randomThoughts" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2018-08-18T03:03:50+02:00" />
+<meta property="article:published_time" content="2018-08-24T01:47:28+02:00" />
 <script type="application/ld+json">
-{"dateModified":"2018-08-18T03:03:50+02:00","datePublished":"2018-08-18T03:03:50+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/montecarlo/ising/"},"headline":"Ising Model","url":"http://localhost:4000/montecarlo/ising/","description":"A Monte Carlo simulation of the Ising model.","@context":"http://schema.org"}</script>
+{"dateModified":"2018-08-24T01:47:28+02:00","datePublished":"2018-08-24T01:47:28+02:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/montecarlo/ising/"},"headline":"Ising Model","url":"http://localhost:4000/montecarlo/ising/","description":"A Monte Carlo simulation of the Ising model.","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -151,7 +151,145 @@ config=TeX-AMS-MML_HTMLorMML"></script>
 
     <div class="container">
       <section id="main_content">
-        <h1 id="under-construction">Under Construction..</h1>
+        <h1 id="ising-model">Ising Model</h1>
+
+<p>The Ising model is a simple model of a magnet. Its study is a very good introduction to the computational method that simulates it, the Monte Carlo (MC) method. Although an exact solution for the three dimensional model has not yet been found, there are approximate and computational methods that try to describe its properties. Nevertheless, the Ising model in two dimensions is the most thoroughly researched model in Statistical Physics and there is only one computational method that can simulate this model, the Monte Carlo method.</p>
+
+<p>Here I just write about my own simulation and what I have understood about this model. I made this attempt in order to practice the MC method myself but it doesn’t mean what I write here or the code I provide is completely correct. For a pretty thorough introduction to the MC method applied on the Ising model there is an excellent [book][the book] which I highly recommend written by M.E.J. Newman and G.T. Barkema.</p>
+
+<h2 id="model">Model</h2>
+
+<p>To start briefly with the model description in two dimensions, the model explains how the magnetism of a bulk material arises from a collection of interacting magnetic dipole moments of many atomic spins within the material.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.physics.ohio-state.edu%2F~ntg%2F6805%2Ffigures%2Fising_model_cartoon_1.png&amp;f=1" alt="Collection of magnetic moments.." class="center-image" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Collection of magnetic moments.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>There is a square (or of any other geometry) lattice in two dimensions which has a magnetic dipole or spin placed on each site. In the simplest case, these spins can have 2 states, up or down and they are represented by two integer values (1 and -1). The spins interact through exchange or other interactions. The interactions take place between the nearest neighbours on the lattice which means that every spin interact with its four neighbours (up, down, left and right). If we assume the presence of an external magnetic field \(B\), the Hamiltonian of the system has the following form.</p>
+
+<p>\(H = -J\sum{s_is_j} - B\sum{si_i}\)</p>
+
+<p>Where the first sum is between nearest neighbours. The J parameter is the interaction parameter, when it has a positive value the model describes a ferromagnetic material meaning all the spins want to line up with one another. On contrary, when J is negative, we have an antiferromagnetic material model.</p>
+
+<p>We have N spins placed on a square lattice and each spin can be in 2 states (up or down), so the system has in total \(2^N\) states. Every state is just a different set of values that all spins can take. For a system that follows the Boltzmann probability distribution, every state \(\mu\) of the system occurs with probability</p>
+
+<p>\(p_\mu = \frac{e^{-\beta E_\mu}{Z}\)</p>
+
+<p>where \(E_\mu\) is the energy of the \(\mu\) state and \(\beta = \frac{1}{kT}\) is the Boltzmann parameter where \(k = 1.38x10^{-23}JK^{-1}\) is the Boltzmann’s constant. The Z parameter is the <strong>partition function</strong> of the system. It’s a sum of the probabilities of all the states of the system and is a normalization factor.</p>
+
+<p>\(Z = \sum{e^{-\beta E_\mu}}\)</p>
+
+<p>Our purpose is to find out how the system behaves at different temperatures.
+The partition function contains all the information we need about the system’s macroscopic behaviour. With this quantity we can estimate thermodynamic quantities of the system like its internal energy \(U = -\frac{\partial \log{Z}}{\partial\beta}\), the specific heat \(C = \frac{\partial U}{\partial T}\) and others. However, it’s imposible to solve the Hamilton’s equation for such a large number of states. Therefore, we might follow a different approach and solve the problem using a computational method.</p>
+
+<h2 id="method">Method</h2>
+
+<p>During the course of a simulation on a system like the one the Ising model describes, we want to answer questions like, what is the average energy or magnetization of the system or their fluctuations like the specific heat and magnetic susceptibility at this or that temperature when the system has reached the equilibrium state? how do these quantities change with respect to temperature?</p>
+
+<p>The most straightforward approach is to define a square lattice of a finite size N. Thus, the partition function is a sum of a finite number of states. This also introduces finite size effects in our simulation. The size of the lattice is one parameter that might affect our results. The larger, the better but it takes more time to get the results.</p>
+
+<p>The second step is to initialize the lattice by placing every spin with an initial state 1 or -1. There are two most common initial state for the Ising model. The first one is \(T = 0\) where all the spins are in the same state 1 or -1, a state of order. The second state is \(T = \infty\) where we randomly initialize all the spins, about half of the spins point up and the rest down. The choice of the initial state might affect the time needed for the system to reach equilibrium. For example if we simulate the system at low temperatures where thermal fluctuations are smaller and start with a state of \(T = 0\), it is more likely to reach equilibrium faster than starting the system with a \(T = \infty\) state. Because we usually simulate the system at different temperatures, there is also another (third) initial state we can use. We can use as an initial state the equilibrium state of the system at the previous temperature.</p>
+
+<p>The next step is to define the interaction of the system. For the Ising model, many interesting properties of the system can be observed in the absence of an external magnetic field. In this case the energy of the system is \(H = -J\sum{s_is_j}\).</p>
+
+<p>The final step is to define the computational method which is going to simulate the physical system. There are many Monte Carlo algorithms but here I use the simplest and the oldest one, the Metropolis algorithm. The Metropolis algorithm is an iterative computational method where at every step the state of the system changes randomly until it finally reaches the equilibrium state. That way we simulate the random thermal fluctuation of the system from state to state. When the system equilibrates, we can sample the quantities of interest over the equilibrium states. One advantage of this method is that we only need to sample a small fraction of the states of the system in order to get accurate estimates of physical quantities but this also introduces statistical errors in the calculation. The steps of the algorithm for the Ising model which define the dynamics (the rule) for changing from one state to another are the following: For a system that is currently at the \(\mu\) state, in order to reach the new state \(\ni\)</p>
+<ul>
+  <li>select a spin at random and change its state.</li>
+  <li>calculate the energy difference between its new and the old state \(\Delta E = E_\ni - E_\mu\).</li>
+  <li>if \(\Delta E &lt;= 0\) accept the new state \(\ni\) of the spin.</li>
+  <li>else if \(\Delta E &gt; 0\) generate a uniform random number r in the interval \([0,1]\) and if
+\(e^{-\beta \Delta E} &gt; r\) accept the new state \(\ni\).</li>
+  <li>else if none of the above occurs, keep the spin to its old state \(\mu\).</li>
+  <li>repeat until we reach the equilibrium states.</li>
+</ul>
+
+<p>This is the Metropolis algorithm with single-spin-flip dynamics because at every step we choose one spin and change its state. When we finally reach the equilibrium states, we continue this procedure for a suitably long time in order to sample the quantities of interest.</p>
+
+<p>This is the usual procedure we follow when we want to simulate a physical system. Just like an experiment in the laboratory, we set the parameters and the initial state of the system, we define the interaction, how the system interacts with the environment and we use the computational method which simulates the system’s behaviour during the experiment.</p>
+
+<h2 id="simulation">Simulation</h2>
+
+<p>You can find the code of the implementation <a href="">here</a>. Any suggestions or improvements are always welcomed!</p>
+
+<p>We start off by defining a 2 dimensional lattice. A common choice is a square lattice with equal number of rows and columns. I created a simple class named lattice which has as its members 2 integers, the number of rows and columns and one 2 dimensional vector of type int which stores the spins of the system.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Lattice</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="n">Lattice</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">c</span><span class="p">)</span><span class="o">:</span><span class="n">m_rows</span><span class="p">{</span><span class="n">r</span><span class="p">},</span> <span class="n">m_columns</span><span class="p">{</span><span class="n">c</span><span class="p">}</span>
+    <span class="p">{</span> <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">initialize</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">rows</span><span class="p">()</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">m_rows</span><span class="p">;}</span>
+    <span class="kt">int</span> <span class="n">columns</span><span class="p">()</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">m_columns</span><span class="p">;}</span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">()</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">m_rows</span> <span class="o">*</span> <span class="n">m_columns</span><span class="p">;}</span>
+
+    <span class="kt">int</span> <span class="n">index</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">j</span><span class="p">)</span><span class="k">const</span><span class="p">{</span><span class="k">return</span> <span class="n">m_lat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];}</span>
+    <span class="kt">int</span><span class="o">&amp;</span> <span class="n">index</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">j</span><span class="p">){</span><span class="k">return</span> <span class="n">m_lat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];}</span>
+
+    <span class="kt">void</span> <span class="n">spinsState</span><span class="p">()</span><span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="n">configuration</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ofstream</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+
+    <span class="kt">int</span> <span class="n">m_rows</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">m_columns</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">m_lat</span><span class="p">;</span>
+
+<span class="p">};</span>
+
+</code></pre></div></div>
+<p>After we’ve defined the lattice we need to initialize the spins’ values. The method <em>initialize()</em> does this work. It has a default argument which indicates the state of all the spins. If the value 1 is provided then all the spins are pointing up. If the value -1 is provided, all the spins are pointing down. If no value is provided, the spins are initialized in a random state where half of them are pointing up and the rest down. I’ve just rewritten this method while I’m writting these lines.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">initialize</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">state</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">rand</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m_rows</span> <span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">m_columns</span> <span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="n">gener</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">else</span>
+                <span class="p">{</span>
+                    <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="n">m_lat</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span> 
+    <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m_rows</span> <span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">m_columns</span> <span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">state</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="n">m_lat</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The rest of the methods return the number of rows, columns, the size of the lattice, and a particular spin. The spinsState method prints to the standard output how many spins are up and down. The configuration method writes the current configuration of the spins to a file.</p>
+
+<h2 id="references">References</h2>
+
+<p><a href="https://www.amazon.com/Monte-Carlo-Methods-Statistical-Physics/dp/0198517971">the book</a></p>
 
       </section>
     </div>
