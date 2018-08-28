@@ -406,13 +406,9 @@ At \\(T_c\\) the system experiences a second order phase transition. Below that 
 
 I also did a visualization of the algorithm using OpenGL. It lasts about \\(\frac{suc. steps}{60 frames \times 60 sec}\simeq 5 min\\) for a 20x20 lattice. I used the initial state (random in particular) of one simulation and the index of the spin that changes at every successive step. The system starts from a random state and ends up in a state where all the spins point up. The white color represents spins that point up and the black those point down.
 
-<html markdown="0">
-<body>
 <video width="320" height="240" controls>
 <source src="../../assets/videos/ising/ising.mp4" type="video/mp4">
 </video>
-</body>
-</html>
 
 It is really funny the fact that with a few lines of code we are able to simulate a physical system. All we need is a little knowledge, a text editor, a compiler and some software libraries.
 
