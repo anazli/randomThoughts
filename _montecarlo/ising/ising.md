@@ -366,7 +366,7 @@ When you do an MC simulation, implementing the code of the simulation is not eno
 
 To achieve that, for every temperature we sample the energy and the magnetization at each step of the algorithm. In particular, we sample the energy per spin and the magnetization per spin which are \\(\epsilon = \frac{E}{N}\\), \\(m = \frac{M}{N}\\). We do that every 1 MC step which consist of \\(N\\) steps of the algorithm. 
 
-For instance, if we simulate the system at a certain temperature, the output we get is something like what the following figure shows. At the beginning the two quantities change rapidly and after some MC steps they reach equilibrium where they fluctuate around their mean value. What we can do is to omit those values at the beginning and calculate their mean value using their equilibrium states.
+For instance, if we simulate the system at a certain temperature, the output we get is something like what the following figure shows. At the beginning the two quantities change rapidly and after some MC steps they reach equilibrium where they fluctuate around their mean value. What we can do is to omit those values at the beginning and calculate their mean value using their equilibrium states. One thing we should be aware of is that the system might get stacked in a local minimum. A good thing to avoid that is to run 2 simulations in parallel with different random seeds and initial states in order to see if they give the same output in equilibrium.
 
 |![Energy and magnetization.](../../assets/images/ising/EnMag20.svg){: .center-image }|
 |:--:|
@@ -374,16 +374,18 @@ For instance, if we simulate the system at a certain temperature, the output we 
 
 Before we do this calculation, we must first see if there are any correlations between those states. Every new state that the algorithm produces depends on the current state of the system and consequently the output we get is a set of correlated values in general. Especially the states close to equilibrium are expected to be more correlated than those at the beginning because they are much similar.
 
-What we need to do is to calculate the correlation time \\(\tau\\) which is a measure of how long we must wait until we get a new statistically independent state. To find \\(\tau\\) we have to calculate the autocorrelation function for every quantity we measure. We can do this using numerical libraries like *numpy* in *python*.
+What we need to do is to calculate the correlation time \\(\tau\\) which is a measure of how long we must wait until we get a new statistically independent state. To find \\(\tau\\) we have to calculate the autocorrelation function for every quantity we measure over the equilibrium states. We can do this using numerical libraries like *numpy* in *python*.
 
 |![Autocorrelation function.](../../assets/images/ising/autocorrM_mcstep.svg){: .center-image }|
 |:--:|
 |Autocorrelation function of the magnetization at a certain temperature. Time in MC steps.|
 
-If we multiply the difference between the value of one quantity and its mean value at two different times (steps) and we get a positive result, it means that they were fluctuating in the same direction, if we get a negative result then they were fluctuating in opposite directions. If we do this for all time steps we get the graph above. The function takes a non-zero value if there are positive or negative correlations and zero if there are not any correlations. We see that as the time between two different states increases the function decays to a zero value. The autocorrelation function falls off exponentially and is of the form \\(x(t) = e^{-\frac{t}{\tau}}\\). The time that takes the function to fall off from its maximum value to \\(\frac{1}{e} = 0.367\\) is the correlation time. If we want to sample statistically independent states we have to sample every \\(2\tau\\) steps. As we see in the figure above the correlation time is about 20 steps, so we must sample every 40 MC steps.
+If we multiply the difference between the value of one quantity and its mean value at two different times (steps) and we get a positive result, it means that they were fluctuating in the same direction, if we get a negative result then they were fluctuating in opposite directions. If we do this for all time steps we get the graph above. The function takes a non-zero value if there are positive or negative correlations and zero if there are not any correlations. We see that as the time between two different states increases the function decays to a zero value. The autocorrelation function falls off exponentially and is of the form \\(x(t) = e^{-\frac{t}{\tau}}\\). The time that takes the function to fall off from its maximum value to \\(\frac{1}{e} = 0.367\\) is the correlation time. If we want to sample statistically independent states we have to sample every \\(2\tau\\) steps. 
+
+As we see in the figure above the correlation time as it is measured over the equilibrium states is about 4 MC steps, so we must sample every 8 MC steps.
 
 Usually we sample at every step of the algorithm (e.g. every sweep of the lattice) and not at an MC step, in this case the correlation time would be much larger as its shown in the figure below. It's the same simulation except that the sampling was done at every step (sweep) of the algorithm.
-We see that the correlation time is about 8000 steps which corresponds to 20 MC steps for a 20x20 lattice as we've just previously found.
+We see that the correlation time is about 1600 steps which corresponds to 4 MC steps for a 20x20 lattice as we've just previously found.
 
 |![Autocorrelation function.](../../assets/images/ising/autocorrM_allsteps.svg){: .center-image }|
 |:--:|
@@ -391,7 +393,23 @@ We see that the correlation time is about 8000 steps which corresponds to 20 MC 
 
 Correlations are in the nature of Markov chain processes and we must always take them into account when we evaluate their output. 
 
+Now, the usual next step when simulating the Ising model is to measure the quantities of interest over a range of temperatures. The good thing about this model is that we already have the analytic solution found by Onsager in 1944 and we can compare our results with them. I did a set of simulations on a 20x20 lattice from \\(T = 1\\) to \\(T = 3\\) in kT units. The results along with the analytic solutions (except magnetic susceptibility) are shown in the figure below.
 
+
+|![Simulation results.](../../assets/images/ising/quantitiesVsT.svg){: .center-image }|
+|:--:|
+|Simulation results for a 20x20 lattice compared with the analytic solutions.|
+
+We see that the numerical results are in good agreement with the analytic solutions away from \\(T_c\\). As the temperature approaches its critical value \\(T_c \simeq 2.26\\) the results diverge. There are other more advanced techniques to simulate the system around this point in order to get accurate results.
+
+At \\(T_c\\) the system experiences a second order phase transition. Below that temperature the system is defined in equilibrium by a state of order where all the spins point to the same direction up or down and the (magnitude of) magnetization has its maximum value. As the temperature increases, the thermal fluctuations of the system increase too and the magnetization starts to fall off. The energy starts to increase. When thermal fluctuations become larger than the exchange interactions at \\(T_c\\) the magnetization becomes zero. From this point and on the system enters a new state where all the spins are randomly oriented up or down and the average magnetization is zero. This quantity is the order parameter for the Ising model. It has a non zero value below \\(T_c\\) and zero value above it. The first derivatives of the energy and magnetization which are the specific heat and magnetic susceptibility are not continuous at \\(T_c\\), a property that characterizes the second order phase transitions. 
+
+I also did a visualization of the algorithm using OpenGL. It lasts about \\(\frac{suc. steps}{60 frames \times 60 sec}\simeq 5 min\\) for a 20x20 lattice. I used the initial state (random in particular) of one simulation and the index of the spin that changes at every successive step. The system starts from a random state and ends up in a state where all the spins point up. The white color represents spins that point up and the black those point down.
+
+<iframe width="420" height="315" src="../../assets/videos/ising/ising.mp4" frameborder="O" allowfullscreen></iframe>
+
+
+Its really funny the fact that with a few lines of code we are able to simulate a physical system. All we need is a little knowledge, a text editor, a compiler and some software libraries.
 
 ## References
 
