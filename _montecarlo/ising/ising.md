@@ -408,9 +408,7 @@ I also did a visualization of the algorithm using OpenGL. It lasts about \\(\fra
 
 <html>
 <div markdown="0">
-<video width="320" height="240" controls>
-<source src="../../assets/videos/ising/ising.mp4" type="video/mp4">
-</video>
+<embed src="https://../../assets/videos/ising/ising.mp4" type="video/mp4"></embed>
 </div>
 </html>
 
