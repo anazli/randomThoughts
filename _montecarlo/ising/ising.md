@@ -408,7 +408,57 @@ I also did a visualization of the algorithm using OpenGL. It lasts about \\(\fra
 
 {% include video.html %}
 
-It is really funny the fact that with a few lines of code we are able to simulate a physical system. All we need is a little knowledge, a text editor, a compiler and some software libraries.
+### Errors
+
+In the last figure above I didn't include the error on the estimates. It was a good way to see qualitatively how the algorithm simulates the system and we saw that it is in good agreement with the analytic solutions. Though, we simulate a finite system of size 20x20 and we let the algorithm  run for a finite number of steps. As a result, there will be an error on our estimates, especially when the fluctuations of the system are large.
+
+When we sample one quantity during one simulation, our best estimate of the expectation value of that quantity is the mean value of our samples 
+
+\\[\hat{x} = \frac{\sum_{i=0}^{N}{x_i}}{N}\\]
+
+where N is the number of our samples. The standard deviation of the sample is 
+
+\\[\sigma = \sqrt{\frac{1}{N-1}\sum_{i=0}^{N}{(x_i- \hat{x})^2}}\\]. 
+
+Then, the standard error on the mean is 
+
+\\[\sigma_e = \frac{\sigma}{\sqrt{N}}\\]
+
+There are some cases where we need to estimate the error on a result which is not the average of some measurement repeated many times during a simulation such as the energy or the magnetization but instead they are defined in terms of averages like the specific heat or magnetic susceptibility. We can't combine the errors of \\(\hat{E}\\) and \\(\hat{E^2}\\), for example, to get the error of the specific heat. 
+
+There are general methods which can be used to find the error on any quantity during an MC simulation. 
+
+The first one is the blocking method where we divide our set of measurements into B blocks. We then calculate the mean value of each block and the mean of those B mean values. The error in our mean value would be in this case 
+
+\\(\sigma = \sqrt{\frac{1}{N-1}(\hat{x^2} - \hat{x}^2)}\\)
+
+The next method is the boostrap method and it's a resampling method. We take our set of M measurements and we generate a new one by picking at random any of those M measurements of our original set, we end up with a new set of M values. Some of those might be included more than once in our new set. We do this for B times and each time we measure the mean value of every new set \\(\hat{x_b}\\). Finally we measure the mean value of all those averages \\(\hat{x} = \frac{1}{B}\sum_{b=1}^{B}{\hat{x_b}}\\) and the error on our estimate of this set would be
+
+\\[\sigma_e = \sqrt{\frac{1}{B-1}\sum_{b=1}^{B}{(\hat{x_b}-\hat{x})^2}\\]
+
+We should generate about \\(B = 200\\) new sets or more. The good thing about this method is that our samples doesn't have to be completely uncorrelated. This method also involves randomness.
+
+The last one is the jackknife method. We take our set of samples and we calculate their mean value \\(\hat{x}\\). After that we remove the first element of our set and we calculate the mean value again, then the second and so on. Every time we remove one element of our set and we calculate the mean of our new set \\(\hat{x_i}\\). The error in our mean value would be
+
+\\[\sigma_e = \sqrt{\sum_{i=0}^{M}{(\hat{x_i}-\hat{x})^2}}\\]
+
+where M is the number of our samples. This method needs a set of truly uncorrelated samples. 
+
+I did one more simulation just like the last one above but now I included the errors of the estimates. The sampling is done every \\(N\times 50\\) steps where \\(N = 20 \times 20\\) is the size of the lattice again. So the actual time step is \\(N\times 50\\) and not N. Every simulation lasted about \\(10^8\\) steps which corresponds to about 5000 uncorrelated measurements for every sample set. The samples were almost uncorrelated like its shown in the figure below.
+
+|![Autocorrelation function.](../../assets/images/ising/autocorrLastSim.svg){: .center-image }|
+|:--:|
+|Autocorrelation function of the magnetization at a certain temperature.|
+
+I used the jackknife method for error estimation but I have also written functions which estimate the error using the bootstrap method.
+
+|![Simulation results.](../../assets/images/ising/quantitiesVsT_last.svg){: .center-image }|
+|:--:|
+|Simulation results for a 20x20 lattice compared with the analytic solutions.|
+
+
+The figure is not different from the above. The errors in the measurements are very small and smaller than the dots in the figure and we can conclude that the measurements are very accurate. Again the results are very close to the analytic solutions. There is there is some divergence for measurements close to the critical temperature especially for the specific heat. This might be due to systematic errors, meaning that we don't let the algorithm run for long enough time or that the system is not infinite in size or because of the poor sampling. 
+
 
 ## References
 
