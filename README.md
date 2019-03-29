@@ -1,3 +1,3 @@
 # randomThoughts
-This is my personal site created by jekyll and hosted on GitHub.
+This is an attempt to create a personal site with jekyll which is hosted on GitHub.
 https://anazli.github.io/randomThoughts
